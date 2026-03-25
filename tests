@@ -1,0 +1,754 @@
+# ========== EXIT TESTS (001 - 049) ==========
+
+[001]
+NAME="Exit: 0"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 0'
+[001-END]
+
+[002]
+NAME="Exit: 1"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 1'
+[002-END]
+
+[003]
+NAME="Exit: Arbitrary integer between 0 and 255"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 119'
+[003-END]
+
+[004]
+NAME="Exit: Negative integer"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit -8'
+[004-END]
+
+[005]
+NAME="Exit: Byte-Overflowing integer"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 599'
+[005-END]
+
+[006]
+NAME="Exit: Long-Overflowing integer"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 59952345678987654323456787654334567898765445678987654345678765456788765456787654567876545678976545678765456789765467876545678765456787654567876545678I9876567'
+[006-END]
+
+[007]
+NAME="Exit: No exit code"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit'
+[007-END]
+
+[008]
+NAME="Exit: No exit code, successful builtin beforehand"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /'
+  echo 'exit'
+[008-END]
+
+[009]
+NAME="Exit: No exit code, successful binary execution beforehand"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/bin/true'
+  echo 'exit'
+[009-END]
+
+[010]
+NAME="Exit: No exit code, failed builtin beforehand (failed)"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  # echo 'cd /non/existent/virtual/directory'
+  echo 'exit'
+[010-END]
+
+[011]
+NAME="Exit: No exit code, failed binary execution beforehand"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/bin/false'
+  echo 'exit'
+[011-END]
+
+[012]
+NAME="Exit: Multiple arguments"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 1 2 3'
+[012-END]
+
+[013]
+NAME="Exit: Unexpected non-numerical character"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 123e9'
+[013-END]
+
+[014]
+NAME="Exit: Wrong expression syntax"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit p123e9'
+[014-END]
+
+[015]
+NAME="Exit: Trailing spaces"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit          '
+[015-END]
+
+[016]
+NAME="Exit: Trailing tabs"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo -e 'exit\t\t\t\t'
+[016-END]
+
+[017]
+NAME="Exit: Extra character in command name"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo -e 'exitt'
+[017-END]
+
+
+# ========== CD TESTS (051 - 099) ==========
+# Those tests require /bin/pwd to be executable by the shell
+
+[051]
+NAME="cd: Root directory"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ; cd /home"
+CLEAN=""
+TESTS=
+  echo '/bin/pwd'
+  echo 'cd /'
+  echo '/bin/pwd'
+[051-END]
+
+[052]
+NAME="cd: Absolute path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/bin/pwd'
+  echo 'cd /usr'
+  echo '/bin/pwd'
+  echo 'cd /dev'
+  echo '/bin/pwd'
+  echo 'cd /proc/1'
+  echo '/bin/pwd'
+  echo 'cd /usr/lib'
+  echo '/bin/pwd'
+[052-END]
+
+[053]
+NAME="cd: Relative path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ; cd /; mkdir -p /tmp/moulitemp/very/deep/hierarchy/mouli/42/astek"
+CLEAN="rm -r /tmp/moulitemp"
+TESTS=
+  echo '/bin/pwd'
+  echo 'cd tmp'
+  echo '/bin/pwd'
+  echo 'cd moulitemp'
+  echo '/bin/pwd'
+  echo 'cd very/deep/hierarchy'
+  echo '/bin/pwd'
+  echo 'cd mouli'
+  echo '/bin/pwd'
+  echo 'cd 42'
+  echo '/bin/pwd'
+[053-END]
+
+[054]
+NAME="cd: Dot-dot in absolute path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/bin/pwd'
+  echo 'cd /usr/bin/../lib'
+  echo '/bin/pwd'
+  echo 'cd /tmp/../tmp'
+  echo '/bin/pwd'
+  echo 'cd /../../../usr'
+  echo '/bin/pwd'
+  echo 'cd /usr/../lib/../'
+  echo '/bin/pwd'
+[054-END]
+
+[055]
+NAME="cd: Dot-dot in relative path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ; cd /; mkdir -p /tmp/moulitemp/very/deep/hierarchy/mouli/42/astek"
+CLEAN="rm -r /tmp/moulitemp"
+TESTS=
+  echo '/bin/pwd'
+  echo 'cd tmp'
+  echo '/bin/pwd'
+  echo 'cd moulitemp'
+  echo '/bin/pwd'
+  echo 'cd ..'
+  echo '/bin/pwd'
+  echo 'cd moulitemp/very/deep/../../very/deep/hierarchy/mouli/42/../../../..'
+  echo '/bin/pwd'
+  echo 'cd ../very'
+  echo '/bin/pwd'
+[055-END]
+
+[056]
+NAME="cd: No permission"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /proc'
+  echo 'cd 5'
+  echo 'pwd'
+  echo 'cd map_files'
+  echo 'pwd'
+  echo 'cd /proc/5/map_files'
+[056-END]
+
+[057]
+NAME="cd: Inexistent directory (Absolute path)"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /dev/non/existent/directory/42/never/gonna/give/you/up'
+[057-END]
+
+[058]
+NAME="cd: Inexistent directory (Relative path)"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd dev/non/existent/directory/42/never/gonna/give/you/up'
+[058-END]
+
+[059]
+NAME="cd: Too many arguments"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /usr lib'
+[059-END]
+
+[060]
+NAME="cd: Argument is a file"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /bin/ls'
+[060-END]
+
+[061]
+NAME="cd: Argument is a null character device"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd /dev/null'
+[061-END]
+
+[062]
+NAME="cd: no argument"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd'
+  echo 'pwd'
+[062-END]
+
+[063]
+NAME="cd: tilde"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd ~'
+  echo 'pwd'
+[063-END]
+
+[064]
+NAME="cd: tilde with extra path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd ~/.local'
+  echo 'pwd'
+[064-END]
+
+[065]
+NAME="cd: tilde in the middle of a path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd /home/~/usr'
+[065-END]
+
+[066]
+NAME="cd: tilde at the end of a path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd /home/~'
+[066-END]
+
+[067]
+NAME="cd: no argument, HOME undefined"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib; unset HOME"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd'
+[067-END]
+
+[068]
+NAME="cd: tilde, HOME undefined"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /usr/lib; unset HOME"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+  echo 'cd'
+[068-END]
+
+
+
+# ========== PROGRAMS EXECUTION TESTS (101 - 149) ==========
+
+[101]
+NAME="execve: /bin/true, relative path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /"
+CLEAN=""
+TESTS=
+  echo 'usr/bin/true'
+[101-END]
+
+[102]
+NAME="execve: /bin/true, absolute path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/usr/bin/true'
+[102-END]
+
+[103]
+NAME="execve: /bin/false, relative path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; cd /"
+CLEAN=""
+TESTS=
+  echo 'usr/bin/false'
+[103-END]
+
+[104]
+NAME="execve: /bin/false, absolute path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/usr/bin/false'
+[104-END]
+
+[105]
+NAME="execve: same directory, no prefix"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; mkdir -p /tmp/mouli_temp_execve; cd /tmp/mouli_temp_execve; echo -e '#!/bin/bash\nexit 0' > script.sh; chmod +x script.sh"
+CLEAN="rm script.sh; cd /; rmdir /tmp/mouli_temp_execve"
+TESTS=
+  echo 'script.sh'
+[105-END]
+
+[106]
+NAME="execve: same directory, ./ prefix"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; mkdir -p /tmp/mouli_temp_execve; cd /tmp/mouli_temp_execve; echo -e '#!/bin/bash\nexit 0' > script.sh; chmod +x script.sh"
+CLEAN="rm script.sh; cd /; rmdir /tmp/mouli_temp_execve"
+TESTS=
+  echo './script.sh'
+[106-END]
+
+[107]
+NAME="execve: no executable permission"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/etc/passwd'
+[107-END]
+
+[108]
+NAME="execve: is a directory"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/usr/lib'
+[108-END]
+
+[109]
+NAME="execve: program with arguments"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/usr/bin/cat --help'
+[109-END]
+
+[110]
+NAME="execve: program with several arguments"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/usr/bin/cat -T -sn --show-ends /etc/fstab'
+[110-END]
+
+[111]
+NAME="execve: incompatible binary file"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo './hello_world'
+[111-END]
+
+
+
+# ========== PATH HANDLING TESTS (151 - 199) ==========
+
+[151]
+NAME="path: program in path: /bin/true"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'true'
+[151-END]
+
+[152]
+NAME="path: program in path: /bin/false"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'false'
+[152-END]
+
+[153]
+NAME="path: program in usual path, but path env does not include it"
+SETUP="export TERM=xterm ; PATH='/usr/lib:/lib'"
+CLEAN=""
+TESTS=
+  echo 'true'
+[153-END]
+
+[154]
+NAME="path: empty path env"
+SETUP="export TERM=xterm ; PATH=''"
+CLEAN=""
+TESTS=
+  echo 'true'
+[154-END]
+
+[155]
+NAME="path: empty entry in path env"
+SETUP="export TERM=xterm ; PATH='/usr/lib:: :/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'true'
+[155-END]
+
+[156]
+NAME="path: executable in path env, but not the usual one"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin:/tmp/mouli_temp_path_handling'; mkdir -p /tmp/mouli_temp_path_handling; echo -e '#!/bin/bash\nexit 0' > /tmp/mouli_temp_path_handling/mscript; chmod +x /tmp/mouli_temp_path_handling/mscript"
+CLEAN="rm -r /tmp/mouli_temp_path_handling"
+TESTS=
+  echo 'mscript'
+[156-END]
+
+[157]
+NAME="path: runnable in path env, but not the usual one, no exec permission"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin:/tmp/mouli_temp_path_handling'; mkdir -p /tmp/mouli_temp_path_handling; echo -e '#!/bin/bash\nexit 0' > /tmp/mouli_temp_path_handling/mscript"
+CLEAN="rm -r /tmp/mouli_temp_path_handling"
+TESTS=
+  echo 'mscript'
+[157-END]
+
+[158]
+NAME="path: ambiguous target, /bin first in path"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin:/tmp/mouli_temp_path_handling'; mkdir -p /tmp/mouli_temp_path_handling; echo -e '#!/bin/bash\necho wrong one\nexit 0' > /tmp/mouli_temp_path_handling/true; chmod +x /tmp/mouli_temp_path_handling/true"
+CLEAN="rm -r /tmp/mouli_temp_path_handling"
+TESTS=
+  echo 'true'
+[158-END]
+
+[159]
+NAME="path: ambiguous target, /bin last in path"
+SETUP="export TERM=xterm ; PATH='/tmp/mouli_temp_path_handling:/usr/bin:/bin'; mkdir -p /tmp/mouli_temp_path_handling; echo -e '#!/bin/bash\necho wrong one\nexit 0' > /tmp/mouli_temp_path_handling/true; chmod +x /tmp/mouli_temp_path_handling/true"
+CLEAN="rm -r /tmp/mouli_temp_path_handling"
+TESTS=
+  echo 'true'
+[159-END]
+
+[160]
+NAME="path: inexistent target"
+SETUP="export TERM=xterm ; PATH='/dev/unknown/device/magic:/bin:/usr/bin:/madoca/magica/is/a/good/anime'"
+CLEAN=""
+TESTS=
+  echo 'true'
+[160-END]
+
+[161]
+NAME="path: inexistent target, command doesnt exist"
+SETUP="export TERM=xterm ; PATH='/dev/unknown/device/magic:/madoca/magica/is/a/good/anime'"
+CLEAN=""
+TESTS=
+  echo 'true'
+[161-END]
+
+# ========== ENV TESTS (201 - 249) ==========
+
+
+[201]
+NAME="setenv: invalid first char"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'setenv .abc val'
+  echo 'setenv 1abc val'
+  echo 'setenv ,abc val'
+  echo 'setenv .abc val'
+  echo 'setenv .nbc val'
+  echo 'setenv . val'
+[201-END]
+
+[202]
+NAME="setenv: invalid char which is not first"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'setenv cabc val'
+  echo 'setenv ababc val'
+  echo 'setenv ddeaabc val'
+  echo 'setenv n val'
+[202-END]
+
+[203]
+NAME="setenv: invalid parameter count"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'unsetenv HOME'
+  echo 'unsetenv USER'
+  echo 'unsetenv NLSPATH'
+  echo 'unsetenv SHELL'
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'setenv'
+  echo 'setenv '
+  echo -e 'setenv \t \t \t'
+  echo 'setenv a b c'
+  echo 'setenv ab cd ef gh ij'
+[203-END]
+
+[204]
+NAME="setenv: odd but valid patterns"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'setenv _'
+  echo 'setenv _.'
+  echo 'setenv A4'
+  echo 'setenv n.a.3.6.7_Cz'
+  echo 'setenv iamspecial ,:,'
+[204-END]
+
+[205]
+NAME="setenv: adding a variable"
+# SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'; env >.envsave; while read line; do unset \"$line\"; done <.envsave"
+# CLEAN="while read line; do export \"$line\"; done <.envsave; rm .envsave"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'unsetenv HOME'
+  echo 'unsetenv USER'
+  echo 'unsetenv NLSPATH'
+  echo 'unsetenv SHELL'
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'env'
+  echo 'setenv i_am_very_special very_unique_value'
+  echo 'setenv otheR_speciaL_onE odd,value!'
+  echo 'setenv LaCB12pourENCAISSEMENT svp'
+  echo 'setenv _. ._.'
+  echo 'env'
+[205-END]
+
+[206]
+NAME="setenv: replacing a variable"
+SETUP="export MY_SECRET=firstone"
+CLEAN=""
+TESTS=
+  echo 'unsetenv HOME'
+  echo 'unsetenv USER'
+  echo 'unsetenv NLSPATH'
+  echo 'unsetenv SHELL'
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'env'
+  echo 'setenv MY_SECRET secondone'
+  echo 'env'
+[206-END]
+
+[207]
+NAME="unsetenv: multiple arguments"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'unsetenv a b c'
+[207-END]
+
+[208]
+NAME="unsetenv: no arguments"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'unsetenv'
+[208-END]
+
+[209]
+NAME="unsetenv: removing a variable"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'; export A=B"
+CLEAN=""
+TESTS=
+echo 'unsetenv HOME'
+  echo 'unsetenv USER'
+  echo 'unsetenv NLSPATH'
+  echo 'unsetenv SHELL'
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'env'
+  echo 'unsetenv A'
+  echo 'env'
+[209-END]
+
+[210]
+NAME="unsetenv: removing several variables at once"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'; export A=B; export B=C; export C=D"
+CLEAN=""
+TESTS=
+  echo 'unsetenv HOME USER NLSPATH SHELL HOSTTYPE VENDOR OSTYPE VENDOR OSTYPE MACHTYPE SHLVL GROUP HOST PWD LOGNAME'
+  echo 'env'
+  echo 'unsetenv A B C'
+  echo 'env'
+[210-END]
+
+
+
+
+
+###### ERROR HANDLING ######## (301-349)
+
+[301]
+NAME="error handling: segv with core dump"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/tmp/segdoer'
+[301-END]
+
+[302]
+NAME="error handling: abrt with core dump"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/tmp/segdoer -ABRT'
+[302-END]
+
+[303]
+NAME="error handling: fpe with core dump"
+SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/tmp/segdoer -FPE'
+[303-END]
+
+#[304]
+#NAME="error handling: segv without core dump"
+#SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+#CLEAN=""
+#TESTS=
+#  echo '/tmp/segdoersuid'
+#[304-END]
+
+#[305]
+#NAME="error handling: abrt without core dump"
+#SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+#CLEAN=""
+#TESTS=
+#  echo '/tmp/segdoersuid -ABRT'
+#[305-END]
+
+#[306]
+#NAME="error handling: fpe without core dump"
+#SETUP="export TERM=xterm; PATH='/bin:/usr/bin'"
+#CLEAN=""
+#TESTS=
+#  echo '/tmp/segdoersuid -FPE'
+#[306-END]
+
+
+[351]
+NAME="pipe: basic piping"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'echo Bonjour | wc -c'
+[351-END]
