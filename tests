@@ -773,41 +773,97 @@ TESTS=
 [401-END]
 
 [402]
-NAME="redirection out: advance"
+NAME="redirection out: advance1"
 SETUP=""
 CLEAN=""
 TESTS=
   echo 'ls >/tmp/test'
   echo 'cat /tmp/test'
-  echo 'pwd>/tmp/test'
-  echo 'cat /tmp/test'
-  echo 'ls> /tmp/test'
-  echo 'cat /tmp/test'
-  echo '>/tmp/test pwd'
-  echo 'cat /tmp/test'
-  echo '> /tmp/test ls'
-  echo 'cat /tmp/test'
 [402-END]
 
 [403]
-NAME="redirection out: advance double"
+NAME="redirection out: advance2"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'pwd>/tmp/test'
+  echo 'cat /tmp/test'
+[403-END]
+
+[404]
+NAME="redirection out: advance3"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'ls> /tmp/test'
+  echo 'cat /tmp/test'
+[404-END]
+
+[405]
+NAME="redirection out: advance4"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo '>/tmp/test pwd'
+  echo 'cat /tmp/test'
+[405-END]
+
+[406]
+NAME="redirection out: advance5"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo '> /tmp/test ls'
+  echo 'cat /tmp/test'
+[406-END]
+
+[407]
+NAME="redirection out: advance double1"
 SETUP=""
 CLEAN=""
 TESTS=
   echo 'ls >>/tmp/test'
   echo 'cat /tmp/test'
+[407-END]
+
+[408]
+NAME="redirection out: advance double2"
+SETUP=""
+CLEAN=""
+TESTS=
   echo 'pwd>>/tmp/test'
   echo 'cat /tmp/test'
+[408-END]
+
+[409]
+NAME="redirection out: advance double3"
+SETUP=""
+CLEAN=""
+TESTS=
   echo 'ls>> /tmp/test'
   echo 'cat /tmp/test'
+[409-END]
+
+[410]
+NAME="redirection out: advance double4"
+SETUP=""
+CLEAN=""
+TESTS=
   echo '>>/tmp/test pwd'
   echo 'cat /tmp/test'
+[410-END]
+
+[411]
+NAME="redirection out: advance double5"
+SETUP=""
+CLEAN=""
+TESTS=
   echo '>> /tmp/test ls'
   echo 'cat /tmp/test'
-[403-END]
+[411-END]
 
-[404]
-NAME="redirection out: error"
+[412]
+NAME="redirection out: error1"
 SETUP=""
 CLEAN=""
 TESTS=
@@ -821,18 +877,18 @@ TESTS=
   echo 'ls >>/tm>p/test >/tmp/nope'
   echo '>ls >/tm>p/test'
   echo 'cat /tmp/test'
-[404-END]
+[412-END]
 
-[405]
+[413]
 NAME="redirection in: basic single"
 SETUP=""
 CLEAN=""
 TESTS=
   echo 'cat < /tmp/test'
   echo 'ls < /tmp/test'
-[405-END]
+[413-END]
 
-[406]
+[414]
 NAME="redirection in: basic double"
 SETUP=""
 CLEAN=""
@@ -847,9 +903,9 @@ TESTS=
     echo 'hello'
     echo 'what'
     echo 'same'
-[406-END]
+[414-END]
 
-[407]
+[415]
 NAME="redirection in: advance single"
 SETUP=""
 CLEAN=""
@@ -867,9 +923,9 @@ TESTS=
   echo 'ls< /tmp/test'
   echo '</tmp/test pwd'
   echo '< /tmp/test ls'
-[407-END]
+[415-END]
 
-[408]
+[416]
 NAME="redirection in: basic double"
 SETUP=""
 CLEAN=""
@@ -889,9 +945,9 @@ TESTS=
   echo '<< same cat'
     echo 'huh'
     echo 'same'
-[408-END]
+[416-END]
 
-[409]
+[417]
 NAME="redirection in: error"
 SETUP=""
 CLEAN=""
@@ -906,9 +962,9 @@ TESTS=
   echo 'ls >>/tm>p/test >/tmp/nope'
   echo '>ls >/tm>p/test'
   echo 'cat /tmp/test'
-[409-END]
+[417-END]
 
-[410]
+[418]
 NAME="redirection in/out: basic single"
 SETUP=""
 CLEAN=""
@@ -920,9 +976,9 @@ TESTS=
   echo 'date > /tmp/test'
   echo 'cat < /tmp/test > /tmp/test_sd'
   echo 'cat /tmp/test_nd'
-[410-END]
+[418-END]
 
-[411]
+[419]
 NAME="redirection in/out: basic double"
 SETUP=""
 CLEAN=""
@@ -938,9 +994,9 @@ TESTS=
     echo 'huh'
     echo 'yo'
   echo 'cat /tmp/test_nd'
-[411-END]
+[419-END]
 
-[412]
+[421]
 NAME="redirection in/out: advance"
 SETUP=""
 CLEAN=""
@@ -982,4 +1038,4 @@ TESTS=
   echo 'cat /tmp/b'
   echo '>/tmp/b< /tmp/a ls'
   echo 'cat /tmp/a'
-[412-END]
+[421-END]
