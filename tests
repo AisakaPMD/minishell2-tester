@@ -753,6 +753,71 @@ TESTS=
   echo 'echo Bonjour | wc -c'
 [351-END]
 
+[352]
+NAME="pipe: two pipes"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'echo Bonjour | wc -c | cat -e'
+[352-END]
+
+[353]
+NAME="pipe: three pipes"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'echo Bonjour | wc -c | cat -e | grep 8'
+[353-END]
+
+[354]
+NAME="pipe: error handling, pipe alone"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo '|'
+[354-END]
+
+[355]
+NAME="pipe: error handling, only left side"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'ls |'
+[355-END]
+
+[356]
+NAME="pipe: error handling, only right side"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo '| ls'
+[356-END]
+
+[357]
+NAME="pipe: error handling, broken pipe"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'seq 1 1000000 | head -n 10'
+[357-END]
+
+[358]
+NAME="pipe: error handling, pipe with an error"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'ls /donotexistplease | cat -e'
+[358-END]
+
+[359]
+NAME="pipe: pipe with a builtin"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'cd  / | cat -e'
+  echo 'ls | cd /'
+[359-END]
+
 [400]
 NAME="redirection out: basic single"
 SETUP=""
@@ -1039,3 +1104,13 @@ TESTS=
   echo '>/tmp/b< /tmp/a ls'
   echo 'cat /tmp/a'
 [421-END]
+
+[422]
+NAME="redirection in/pipe: advance double"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'env << EOF | grep HOME'
+    echo 'ignored'
+    echo 'EOF'
+[422-END]
